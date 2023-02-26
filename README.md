@@ -1,49 +1,22 @@
-<p align="center">
-  <a href="https://www.gatsbyjs.com/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter">
-    <img alt="Gatsby" src="https://www.gatsbyjs.com/Gatsby-Monogram.svg" width="60" />
-  </a>
-</p>
-<h1 align="center">
-  Gatsby Minimal Starter
-</h1>
+# Minimum repro: MDX table of contents with Markdown formatting in headings
 
-## 🚀 Quick start
+## Problem
 
-1.  **Create a Gatsby site.**
+When MDX files use Markdown formatting in headings (like bold, italics, inline code, or links), the `tableOfContents` field on the MDX node doesn't show the correct heading `title`.
 
-    Use the Gatsby CLI to create a new site, specifying the minimal starter.
+To see the issue, start the dev server and go to `localhost:8000`.
 
-    ```shell
-    # create a new Gatsby site using the minimal starter
-    npm init gatsby
-    ```
+## Potential solution
 
-2.  **Start developing.**
+I was able to get the table of contents titles to display correctly by changing `node_modules/gatsby-plugin-mdx/dist/remark-infer-toc-meta.js` ([lines 52-54](https://github.com/gatsbyjs/gatsby/blob/master/packages/gatsby-plugin-mdx/src/remark-infer-toc-meta.ts#L52-L54)) to this:
 
-    Navigate into your new site’s directory and start it up.
-
-    ```shell
-    cd my-gatsby-site/
-    npm run develop
-    ```
-
-3.  **Open the code and start customizing!**
-
-    Your site is now running at http://localhost:8000!
-
-    Edit `src/pages/index.js` to see your site update in real-time!
-
-4.  **Learn more**
-
-    - [Documentation](https://www.gatsbyjs.com/docs/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
-    - [Tutorials](https://www.gatsbyjs.com/tutorial/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
-    - [Guides](https://www.gatsbyjs.com/tutorial/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
-    - [API Reference](https://www.gatsbyjs.com/docs/api-reference/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
-    - [Plugin Library](https://www.gatsbyjs.com/plugins?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
-    - [Cheat Sheet](https://www.gatsbyjs.com/docs/cheat-sheet/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
-
-## 🚀 Quick start (Netlify)
-
-Deploy this starter with one click on [Netlify](https://app.netlify.com/signup):
-
-[<img src="https://www.netlify.com/img/deploy/button.svg" alt="Deploy to Netlify" />](https://app.netlify.com/start/deploy?repository=https://github.com/gatsbyjs/gatsby-starter-minimal)
+```js
+if (item.type === `text` || item.type === `inlineCode`) {
+  if (typedCurrent.title) {
+    typedCurrent.title = typedCurrent.title + item.value;
+  }
+  else {
+    typedCurrent.title = item.value;
+  }
+}
+```
