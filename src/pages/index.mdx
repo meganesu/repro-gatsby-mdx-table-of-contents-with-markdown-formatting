@@ -1,0 +1,29 @@
+import {graphql} from "gatsby"
+import TableOfContents from "../components/table-of-contents"
+import "./index.module.css"
+
+export const query = graphql`
+  query {
+    allMdx {
+      nodes {
+        body
+        tableOfContents
+        id
+      }
+    }
+  }
+`
+
+# Welcome
+
+This is an MDX page to demonstrate how the `gatsby-plugin-mdx` table of contents handles Markdown formatting.
+
+<TableOfContents
+  tableOfContents={props.data.allMdx.nodes[0].tableOfContents}
+/>
+
+## This heading has **bold** and *italicized* text
+
+## This heading has `inline code`
+
+## This heading contains a [link](#)
