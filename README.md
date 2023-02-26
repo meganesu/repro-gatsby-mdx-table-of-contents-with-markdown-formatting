@@ -6,6 +6,8 @@ When MDX files use Markdown formatting in headings (like bold, italics, inline c
 
 To see the issue, start the dev server and go to `localhost:8000`.
 
+![Screenshot of the index page. The heading titles in the table of contents don't match the headings in the body of the page.](./screenshot-before.png)
+
 ## Potential solution
 
 I was able to get the table of contents titles to display correctly by changing `node_modules/gatsby-plugin-mdx/dist/remark-infer-toc-meta.js` ([lines 52-54](https://github.com/gatsbyjs/gatsby/blob/master/packages/gatsby-plugin-mdx/src/remark-infer-toc-meta.ts#L52-L54)) to this:
@@ -20,3 +22,5 @@ if (item.type === `text` || item.type === `inlineCode`) {
   }
 }
 ```
+
+![Screenshot of the index page. Now the heading titles in the table of contents match the headings in the body of the page.](./screenshot-after.png)
